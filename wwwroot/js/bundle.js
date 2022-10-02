@@ -44741,20 +44741,28 @@ window.onload = () => {
     let direction = 'right';
     snake.head.sprite.rotation = 3 * Math.PI / 2;
     arrowDown.press = () => {
-        snake.head.sprite.rotation = 0;
-        direction = 'down';
+        if (direction != 'up') {
+            snake.head.sprite.rotation = 0;
+            direction = 'down';
+        }
     };
     arrowUp.press = () => {
-        snake.head.sprite.rotation = Math.PI;
-        direction = 'up';
+        if (direction != 'down') {
+            snake.head.sprite.rotation = Math.PI;
+            direction = 'up';
+        }
     };
     arrowLeft.press = () => {
-        snake.head.sprite.rotation = Math.PI / 2;
-        direction = 'left';
+        if (direction != 'right') {
+            snake.head.sprite.rotation = Math.PI / 2;
+            direction = 'left';
+        }
     };
     arrowRight.press = () => {
-        snake.head.sprite.rotation = 3 * Math.PI / 2;
-        direction = 'right';
+        if (direction != 'left') {
+            snake.head.sprite.rotation = 3 * Math.PI / 2;
+            direction = 'right';
+        }
     };
     addNodeKey.press = () => {
         console.log("a pressed");
@@ -44799,6 +44807,10 @@ window.onload = () => {
             if (food.checkEat(snake)) {
                 food.placeFood();
                 eat(snake, direction, container);
+            }
+            else if (checkDead(snake)) {
+                alert("You died!");
+                location.reload();
             }
             console.log(snake.head.sprite.x);
             console.log(snake.head.sprite.y);
@@ -44914,6 +44926,20 @@ function moveTail(snake, container, direction) {
         container.addChild(snake.head.next.sprite);
         snake.removeTailNode(container);
     }
+}
+function checkDead(snake) {
+    if (snake.head.next != null) {
+        let current = snake.head;
+        for (let i = 0; i < snake.length; i++) {
+            if (current.next != null) {
+                if (snake.head.sprite.x === current.next.sprite.x && snake.head.sprite.y === current.next.sprite.y) {
+                    return true;
+                }
+                current = current.next;
+            }
+        }
+    }
+    return false;
 }
 
 })();
